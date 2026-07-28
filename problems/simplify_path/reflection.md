@@ -13,10 +13,10 @@ I wrote down that I needed a way to know if I have seen '/, and how many I have 
 So afterwards, I tried mapping out the phases. At any point, I could be in a '/' phase, a '/./' detection phase, or a '/../' detection phase. 
 
 At the 30 minute time stamp, I stopped working and looked at the solution. I asked the following questions while reading:
-1. How do you solve this with a stack?
-2. Can I solve this problem without using .split?
-3. Can we do better than O(n) time and space? Why?
+1. How do you solve this with a stack? -> the idea is not to introduce unnecessary complexity by pushing every character into the stack and focus only on storing the individual file names, because you have the rules to reconstruct the simplified path from just the file names.
+2. Can I solve this problem without using .split? -> Yes, simply traverse the string and ignore characters like extra slashes. Note that since flush pushes to the queue depend on seeing a '/', an extra slash must be added to the string being traversed to ensure the last file name gets pushed.
+3. Can we do better than O(n) time and space? Why? -> No, because you must at the very least visit each character once. I'm not quite sure why we can't do better than O(n) space at the moment. 
 
-And of course, when I finished those I returned to my original question: what properties of this question make a stack a good choice?
+And of course, when I finished those I returned to my original question: what properties of this question make a stack a good choice? I think the answer is that a stack is a data structure that gives you the ability to backtrack due to its LIFO property. Whenever elements you have already visited are unable to be completely destroyed, or you need some notion of history, a stack (or queue depending on the constraint) might be a good choice. Let me know if my thought needs any correction! 
 
-When I went back and fixed my code, I ran into a bug that occurred because originally, I wrote a conditional branch that checked for "
+When I went back and fixed my code, I ran into a bug that occurred because originally, I wrote a conditional branch that checked for "flush == '..' and len(new_path) > 0", which meant that for an input like "/../", I would roll over to the elif and else blocks where I push the flush into the stack, even though I shouldn't in this case. I figured this out through a series of print statements and then fixed it by separating the conditions, at the expense of a little bit messier code. If I were to redo this, I would look at how I can simplify the control flow somehow. 
